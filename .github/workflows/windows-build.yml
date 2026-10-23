@@ -1,0 +1,57 @@
+name: Windows build (cross-compile)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  build-windows:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+
+    - name: Set up JDK 21
+      uses: actions/setup-java@v5
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Install cross-compile toolchain (MinGW-w64)
+      run: |
+        sudo apt-get update
+        sudo apt install -y wget unzip git gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64
+
+    - name: Download SWT for Windows
+      run: curl -fsSL -o swt.zip https://archive.eclipse.org/eclipse/downloads/drops4/R-4.37-202509050730/swt-4.37-win32-win32-x86_64.zip
+
+    - name: Install SWT into local Maven repository
+      run: |
+        mkdir swt-4.37-win32-win32-x86_64
+        cd swt-4.37-win32-win32-x86_64
+        unzip -q ../swt.zip
+        mvn install:install-file -Dfile=swt.jar -DgroupId=org.eclipse.swt -DartifactId=org.eclipse.swt.win32.win32 -Dpackaging=jar -Dversion=4.37
+
+    - name: Build TuxGuitar for Windows
+      run: cd desktop/build-scripts/tuxguitar-windows-swt-x86_64 && mvn -e clean verify -P native-modules -P -platform-linux -P platform-windows
+
+    - name: Add JRE (Temurin 21) to the bundle
+      run: |
+        cd desktop/build-scripts/tuxguitar-windows-swt-x86_64/target
+        curl -fsSL -o jre.zip "https://api.adoptium.net/v3/binary/latest/21/ga/windows/x64/jre/hotspot/normal/eclipse"
+        unzip -q jre.zip
+        BUNDLE=$(ls -d tuxguitar-*-windows-swt-x86_64)
+        mkdir -p "$BUNDLE/jre"
+        mv jdk-*/* "$BUNDLE/jre/"
+
+    - name: Package portable bundle
+      run: |
+        cd desktop/build-scripts/tuxguitar-windows-swt-x86_64/target
+        zip -qr TuxGuitar-windows-portable.zip tuxguitar-*-windows-swt-x86_64
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: TuxGuitar-Windows-portable
+        path: desktop/build-scripts/tuxguitar-windows-swt-x86_64/target/TuxGuitar-windows-portable.zip
