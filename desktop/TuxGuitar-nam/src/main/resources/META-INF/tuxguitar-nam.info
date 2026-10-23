@@ -1,0 +1,5 @@
+### Plugin Information ###
+plugin.name=TuxGuitar NAM
+plugin.description=Neural Amp Modeler audio processing for TuxGuitar
+plugin.author=TG-NAM
+plugin.version=0.1
