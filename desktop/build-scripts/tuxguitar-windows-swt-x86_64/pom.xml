@@ -317,6 +317,13 @@
 								                            <artifactItem>
                                 <groupId>${project.groupId}</groupId>
                                 <artifactId>tuxguitar-nam</artifactId>
+								                            <artifactItem>
+                                <groupId>${project.groupId}</groupId>
+                                <artifactId>tuxguitar-nam</artifactId>
+                                <version>${project.version}</version>
+                                <destFileName>tuxguitar-nam.jar</destFileName>
+                                <outputDirectory>${project.build.directory}/${project.finalName}/share/plugins</outputDirectory>
+                            </artifactItem>
                                 <destFileName>tuxguitar-nam.jar</destFileName>
                                 <outputDirectory>${project.build.directory}/${project.finalName}/share/plugins</outputDirectory>
                             </artifactItem>
