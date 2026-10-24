@@ -104,7 +104,7 @@ public class NamAudioProcessorUI implements TGAudioProcessorUI, UISelectionListe
 		gainGroup.setText("Output gain");
 		dialogLayout.set(gainGroup, 2, 1, UITableLayout.ALIGN_FILL, UITableLayout.ALIGN_FILL, true, true);
 
-		this.gainSlider = uiFactory.createSlider(gainGroup);
+		this.gainSlider = uiFactory.createHorizontalSlider(gainGroup);
 		this.gainSlider.setMinimum(0);
 		this.gainSlider.setMaximum(200);
 		this.gainSlider.setIncrement(5);
