@@ -1,0 +1,93 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+		http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<parent>
+		<artifactId>tuxguitar-pom</artifactId>
+		<groupId>app.tuxguitar</groupId>
+		<version>9.99-SNAPSHOT</version>
+		<relativePath>../../../</relativePath>
+	</parent>
+
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>tuxguitar-nam-windows-x86_64</artifactId>
+	<packaging>pom</packaging>
+	<name>${project.artifactId}</name>
+
+	<properties>
+		<tuxguitar-nam.jni.path>${project.parent.relativePath}/TuxGuitar-nam/jni/</tuxguitar-nam.jni.path>
+		<tuxguitar-nam.jni.library.name>tuxguitar-nam-jni.dll</tuxguitar-nam.jni.library.name>
+	</properties>
+
+	<modules>
+		<module>${project.parent.relativePath}/TuxGuitar-nam</module>
+	</modules>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<id>compile-native</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target name="compile-native">
+								<exec dir="${tuxguitar-nam.jni.path}" executable="cmake" failonerror="true">
+									<arg value="-B" />
+									<arg value="build" />
+									<arg value="-DCMAKE_BUILD_TYPE=Release" />
+									<arg value="-DCMAKE_SYSTEM_NAME=Windows" />
+									<arg value="-DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc" />
+									<arg value="-DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++" />
+								</exec>
+								<exec dir="${tuxguitar-nam.jni.path}" executable="cmake" failonerror="true">
+									<arg value="--build" />
+									<arg value="build" />
+									<arg value="--config" />
+									<arg value="Release" />
+									<arg value="-j" />
+									<arg value="2" />
+								</exec>
+							</target>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>clean-native</id>
+						<phase>clean</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target name="clean-native">
+								<delete dir="${tuxguitar-nam.jni.path}/build" />
+							</target>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>native-module-copy</id>
+						<phase>package</phase>
+						<configuration>
+							<target name="copy-files">
+								<mkdir dir="${project.build.directory}/build/lib" />
+								<copy todir="${project.build.directory}/build/lib">
+									<fileset file="${tuxguitar-nam.jni.path}/build/${tuxguitar-nam.jni.library.name}" />
+								</copy>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

@@ -421,11 +421,12 @@
                     <value>true</value>
                 </property>
             </activation>
-            <modules>
-                <module>../native-modules/tuxguitar-winmm-windows-x86_64</module>
-                <module>../native-modules/tuxguitar-fluidsynth-windows-x86_64</module>
-                <module>../native-modules/tuxguitar-jack-windows-x86_64</module>
-            </modules>
+           			<modules>
+				<module>../native-modules/tuxguitar-winmm-windows-x86_64</module>
+				<module>../native-modules/tuxguitar-fluidsynth-windows-x86_64</module>
+				<module>../native-modules/tuxguitar-jack-windows-x86_64</module>
+				<module>../native-modules/tuxguitar-nam-windows-x86_64</module>
+			</modules>
 
             <build>
                 <plugins>
@@ -449,6 +450,9 @@
                                             <copy todir="${project.build.directory}/${project.finalName}/">
                                                 <fileset dir="../native-modules/tuxguitar-jack-windows-x86_64/target/build" />
                                             </copy>
+																						<copy todir="${project.build.directory}/${project.finalName}/">
+												<fileset dir="../native-modules/tuxguitar-nam-windows-x86_64/target/build" />
+											</copy>
                                         <!-- /PLUGINS FILES -->
                                     </target>
                                 </configuration>
