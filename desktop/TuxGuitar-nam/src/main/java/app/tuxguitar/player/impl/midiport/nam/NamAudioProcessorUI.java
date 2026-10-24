@@ -1,16 +1,22 @@
 package app.tuxguitar.player.impl.midiport.nam;
 
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.List;
 
 import app.tuxguitar.app.TuxGuitar;
+import app.tuxguitar.app.action.impl.view.TGOpenViewAction;
 import app.tuxguitar.app.system.icons.TGIconManager;
 import app.tuxguitar.app.ui.TGApplication;
 import app.tuxguitar.app.util.TGFileChooser;
 import app.tuxguitar.app.view.dialog.file.TGFileChooserDialog;
 import app.tuxguitar.app.view.dialog.file.TGFileChooserHandler;
+import app.tuxguitar.app.view.dialog.message.TGMessageDialog;
+import app.tuxguitar.app.view.dialog.message.TGMessageDialogController;
 import app.tuxguitar.app.view.util.TGDialogUtil;
+import app.tuxguitar.editor.action.TGActionProcessor;
 import app.tuxguitar.io.base.TGFileFormat;
 import app.tuxguitar.midi.synth.ui.TGAudioProcessorUI;
 import app.tuxguitar.midi.synth.ui.TGAudioProcessorUICallback;
@@ -120,11 +126,31 @@ public class NamAudioProcessorUI implements TGAudioProcessorUI, UISelectionListe
 	}
 
 	public void chooseModel(UIWindow parent) {
-		TGFileChooser.getInstance(this.context).openChooser(new TGFileChooserHandler() {
-			public void updateFileName(String file) {
-				NamAudioProcessorUI.this.applyModel(file);
-			}
-		}, NAM_FORMATS, TGFileChooserDialog.STYLE_OPEN);
+		try {
+			TGFileChooser.getInstance(this.context).openChooser(new TGFileChooserHandler() {
+				public void updateFileName(String file) {
+					try {
+						NamAudioProcessorUI.this.applyModel(file);
+					} catch (Throwable e) {
+						NamAudioProcessorUI.this.showError(e);
+					}
+				}
+			}, NAM_FORMATS, TGFileChooserDialog.STYLE_OPEN);
+		} catch (Throwable e) {
+			this.showError(e);
+		}
+	}
+
+	private void showError(Throwable e) {
+		e.printStackTrace();
+		StringWriter stackTrace = new StringWriter();
+		e.printStackTrace(new PrintWriter(stackTrace));
+		TGActionProcessor tgActionProcessor = new TGActionProcessor(this.context, TGOpenViewAction.NAME);
+		tgActionProcessor.setAttribute(TGOpenViewAction.ATTRIBUTE_CONTROLLER, new TGMessageDialogController());
+		tgActionProcessor.setAttribute(TGMessageDialog.ATTRIBUTE_TITLE, "TG-NAM");
+		tgActionProcessor.setAttribute(TGMessageDialog.ATTRIBUTE_MESSAGE, e.getClass().getName() + ": " + e.getMessage() + "\n\n" + stackTrace.toString());
+		tgActionProcessor.setAttribute(TGMessageDialog.ATTRIBUTE_STYLE, TGMessageDialog.STYLE_ERROR);
+		tgActionProcessor.process();
 	}
 
 	public void applyModel(String path) {
