@@ -38,7 +38,7 @@
 			<artifactId>tuxguitar-ui-toolkit</artifactId>
 			<scope>provided</scope>
 		</dependency>
-                <dependency>
+            <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>tuxguitar-editor-utils</artifactId>
             <scope>provided</scope>
