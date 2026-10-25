@@ -40,6 +40,7 @@ target_include_directories(tuxguitar-nam-jni PRIVATE
     ${namcore_SOURCE_DIR}/Dependencies/eigen
     ${namcore_SOURCE_DIR}/Dependencies/nlohmann
     $ENV{JAVA_HOME}/include
+    $ENV{JAVA_HOME}/include/linux
     $ENV{JAVA_HOME}/include/win32
 )
 
