@@ -36,6 +36,7 @@ set_target_properties(tuxguitar-nam-jni PROPERTIES
 )
 
 target_include_directories(tuxguitar-nam-jni PRIVATE
+    ${namcore_SOURCE_DIR}
     ${namcore_SOURCE_DIR}/NAM
     ${namcore_SOURCE_DIR}/Dependencies/eigen
     ${namcore_SOURCE_DIR}/Dependencies/nlohmann
