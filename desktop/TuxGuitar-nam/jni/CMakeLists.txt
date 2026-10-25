@@ -53,3 +53,10 @@ target_compile_definitions(tuxguitar-nam-jni PRIVATE
 target_compile_options(tuxguitar-nam-jni PRIVATE
     $<$<CONFIG:Release>:-O2>
 )
+# Windows portable: statycznie dolinkuj runtime MinGW
+# (bez tego DLL wymaga libstdc++-6.dll itd., których nie ma w bundlu)
+target_link_options(tuxguitar-nam-jni PRIVATE
+    -static
+    -static-libgcc
+    -static-libstdc++
+)
