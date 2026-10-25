@@ -3,6 +3,9 @@
 
 #include <jni.h>
 
+#undef JNIEXPORT
+#define JNIEXPORT __declspec(dllexport)
+
 #include <NAM/dsp.h>
 #include <NAM/get_dsp.h>
 
