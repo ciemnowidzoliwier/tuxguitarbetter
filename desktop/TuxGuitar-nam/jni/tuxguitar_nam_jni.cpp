@@ -74,7 +74,7 @@ JNIEXPORT jlong JNICALL Java_app_tuxguitar_player_impl_midiport_nam_NamNative_nO
   std::unique_ptr<nam::DSP> dsp;
   try
   {
-    dsp = nam::get_dsp(path);
+    dsp = nam::get_dsp(std::filesystem::path(path));
   }
   catch (...)
   {
