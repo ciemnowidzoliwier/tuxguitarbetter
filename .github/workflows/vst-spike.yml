@@ -1,0 +1,36 @@
+name: VST spike S0 (cross-compile)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'desktop/TuxGuitar-vst/jni/spike/**'
+      - '.github/workflows/vst-spike.yml'
+
+jobs:
+  spike:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+
+    - name: Install MinGW-w64 cross toolchain
+      run: |
+        sudo apt-get update
+        sudo apt install -y cmake gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64
+
+    - name: Configure (Windows x64 cross)
+      run: |
+        cmake -S desktop/TuxGuitar-vst/jni/spike -B spike-build \
+          -DCMAKE_SYSTEM_NAME=Windows \
+          -DCMAKE_SYSTEM_PROCESSOR=x86_64 \
+          -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc \
+          -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++
+
+    - name: Build
+      run: cmake --build spike-build -j"$(nproc)"
+
+    - name: Upload spike exe
+      uses: actions/upload-artifact@v4
+      with:
+        name: vst-spike-windows-x64
+        path: spike-build/vst_spike.exe
