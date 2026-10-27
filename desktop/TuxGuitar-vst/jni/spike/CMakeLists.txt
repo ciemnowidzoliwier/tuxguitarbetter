@@ -37,8 +37,8 @@ add_executable(vst_spike
 target_include_directories(vst_spike PRIVATE
   ${vst3sdk_SOURCE_DIR}
   ${clap_SOURCE_DIR}/include
-  target_compile_definitions(vst_spike PRIVATE RELEASE)
 )
+target_compile_definitions(vst_spike PRIVATE RELEASE)
 
 # SDK linkuje Shell32 przez #pragma comment (ignorowane przez GCC) - linkuj jawnie.
 target_link_libraries(vst_spike PRIVATE shell32)
