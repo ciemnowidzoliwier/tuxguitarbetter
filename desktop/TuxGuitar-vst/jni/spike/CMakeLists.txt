@@ -31,13 +31,23 @@ add_executable(vst_spike
   ${vst3sdk_SOURCE_DIR}/public.sdk/source/vst/hosting/module.cpp
   ${vst3sdk_SOURCE_DIR}/public.sdk/source/vst/hosting/module_win32.cpp
   ${vst3sdk_SOURCE_DIR}/public.sdk/source/vst/utility/stringconvert.cpp
+  # implementacja Steinberg::StringConvert (link error: undefined reference to
+  # Steinberg::StringConvert::convert) - deklaracja w commonstringconvert.h:
+  ${vst3sdk_SOURCE_DIR}/public.sdk/source/common/commonstringconvert.cpp
+  # implementacja Steinberg::String (uzywana przez module_win32) - z submodulu base:
   ${vst3sdk_SOURCE_DIR}/base/source/fstring.cpp
+  # FObject (baza dla StringObject w fstring.cpp) + iid interfejsow base:
+  ${vst3sdk_SOURCE_DIR}/base/source/fobject.cpp
+  ${vst3sdk_SOURCE_DIR}/base/source/baseiids.cpp
 )
 
 target_include_directories(vst_spike PRIVATE
   ${vst3sdk_SOURCE_DIR}
   ${clap_SOURCE_DIR}/include
 )
+
+# SDK wymaga jawnego trybu (fdebug.h: #error DEVELOPMENT, RELEASE, _DEBUG, or NDEBUG
+# must be defined!) - oficjalny CMake SDK ustawia to sam, my kompilujemy recznie.
 target_compile_definitions(vst_spike PRIVATE RELEASE)
 
 # SDK linkuje Shell32 przez #pragma comment (ignorowane przez GCC) - linkuj jawnie.
