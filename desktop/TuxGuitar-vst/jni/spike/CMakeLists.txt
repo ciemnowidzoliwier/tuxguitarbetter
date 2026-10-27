@@ -31,6 +31,7 @@ add_executable(vst_spike
   ${vst3sdk_SOURCE_DIR}/public.sdk/source/vst/hosting/module.cpp
   ${vst3sdk_SOURCE_DIR}/public.sdk/source/vst/hosting/module_win32.cpp
   ${vst3sdk_SOURCE_DIR}/public.sdk/source/vst/utility/stringconvert.cpp
+  ${vst3sdk_SOURCE_DIR}/base/source/fstring.cpp
 )
 
 target_include_directories(vst_spike PRIVATE
