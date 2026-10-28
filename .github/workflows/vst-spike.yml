@@ -46,7 +46,7 @@ jobs:
       with:
         name: vst-spike-windows-x64
 
-    - name: Pobierz Surge XT (darmowy synth: VST3 + CLAP w jednym pakiecie)
+    - name: Pobierz Surge XT (darmowy synth VST3 + CLAP w jednym pakiecie)
       env:
         GH_TOKEN: ${{ github.token }}
       shell: pwsh
