@@ -39,6 +39,8 @@ add_executable(vst_spike
   # FObject (baza dla StringObject w fstring.cpp) + iid interfejsow base:
   ${vst3sdk_SOURCE_DIR}/base/source/fobject.cpp
   ${vst3sdk_SOURCE_DIR}/base/source/baseiids.cpp
+  # FLock uzywany przez FObject (Steinberg::Base::Thread):
+  ${vst3sdk_SOURCE_DIR}/base/thread/source/flock.cpp
 )
 
 target_include_directories(vst_spike PRIVATE
