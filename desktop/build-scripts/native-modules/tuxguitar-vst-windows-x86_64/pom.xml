@@ -1,0 +1,116 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+		http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<parent>
+		<artifactId>tuxguitar-pom</artifactId>
+		<groupId>app.tuxguitar</groupId>
+		<version>9.99-SNAPSHOT</version>
+		<relativePath>../../../</relativePath>
+	</parent>
+
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>tuxguitar-vst-windows-x86_64</artifactId>
+	<packaging>pom</packaging>
+	<name>TuxGuitar VST Windows x86_64 Native Module</name>
+
+	<properties>
+		<tuxguitar-vst.jni.path>${project.parent.relativePath}/TuxGuitar-vst/src/main/jni/</tuxguitar-vst.jni.path>
+		<tuxguitar-vst.jni.library.name>tuxguitar-vst-jni.dll</tuxguitar-vst.jni.library.name>
+	</properties>
+
+	<modules>
+		<module>${project.parent.relativePath}/TuxGuitar-vst</module>
+	</modules>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>3.1.0</version>
+				<executions>
+					<execution>
+						<id>compile-native-jni</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target name="compile-native-jni">
+								<exec dir="${tuxguitar-vst.jni.path}" executable="cmake" failonerror="true">
+									<arg value="-B" />
+									<arg value="build-windows" />
+									<arg value="-DCMAKE_SYSTEM_NAME=Windows" />
+									<arg value="-DCMAKE_SYSTEM_PROCESSOR=x86_64" />
+									<arg value="-DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc" />
+									<arg value="-DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++" />
+									<arg value="-DCMAKE_BUILD_TYPE=Release" />
+								</exec>
+								<exec dir="${tuxguitar-vst.jni.path}/build-windows" executable="cmake" failonerror="true">
+									<arg value="--build" />
+									<arg value="." />
+									<arg value="-j$(nproc)" />
+								</exec>
+							</target>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>clean-native-jni</id>
+						<phase>clean</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target name="clean-native-jni">
+								<delete dir="${tuxguitar-vst.jni.path}/build-windows" />
+							</target>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>native-module-jni-copy</id>
+						<phase>package</phase>
+						<configuration>
+							<target name="native-module-jni-copy">
+								<mkdir dir="${project.build.directory}/build/lib" />
+								<copy todir="${project.build.directory}/build/lib">
+									<fileset dir="${tuxguitar-vst.jni.path}/build-windows" includes="tuxguitar-vst-jni.dll" />
+								</copy>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.5.0</version>
+				<executions>
+					<execution>
+						<id>native-module-copy-libs</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>tuxguitar-vst</artifactId>
+									<destFileName>tuxguitar-vst.jar</destFileName>
+									<outputDirectory>${project.build.directory}/build/share/plugins</outputDirectory>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
