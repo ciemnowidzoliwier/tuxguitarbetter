@@ -34,6 +34,8 @@ set(enable-readline OFF CACHE BOOL "" FORCE)
 set(enable-waveout OFF CACHE BOOL "" FORCE)
 set(enable-dsound OFF CACHE BOOL "" FORCE)
 set(enable-midishare OFF CACHE BOOL "" FORCE)
+# Disable GLib2 - not available for Android cross-compilation
+set(enable-glib2 OFF CACHE BOOL "" FORCE)
 
 # Build FluidSynth as a static library to embed in our JNI library
 # This avoids needing to package libfluidsynth.so separately
