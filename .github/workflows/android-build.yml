@@ -45,6 +45,7 @@ jobs:
           api-level: 35
           ndk-version: r27c
           cmake-version: '3.22.1'
+          licenses: 'android-sdk-license-.* android-sdk-preview-license-.*'
 
       - name: Cache Gradle packages
         uses: actions/cache@v4
@@ -112,6 +113,7 @@ jobs:
         with:
           api-level: 35
           ndk-version: r27c
+          licenses: 'android-sdk-license-.* android-sdk-preview-license-.*'
 
       - name: Make gradlew executable
         run: chmod +x android/build-scripts/tuxguitar-android/gradlew
