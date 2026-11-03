@@ -52,6 +52,7 @@
 		<module>../../TuxGuitar-synth-gervill</module>
 		<module>../../TuxGuitar-synth-export</module>
 		<module>../../TuxGuitar-debug-helper</module>
+		<module>../../TuxGuitar-nam</module>
 	</modules>
 
 	<build>
@@ -315,6 +316,12 @@
 									<destFileName>tuxguitar-debug-helper.jar</destFileName>
 									<outputDirectory>${project.build.directory}/${project.finalName}/share/plugins</outputDirectory>
 								</artifactItem>
+								<artifactItem>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>tuxguitar-nam</artifactId>
+									<destFileName>tuxguitar-nam.jar</destFileName>
+									<outputDirectory>${project.build.directory}/${project.finalName}/share/plugins</outputDirectory>
+								</artifactItem>
 								<!-- /PLUGINS -->
 
 							</artifactItems>
@@ -388,6 +395,7 @@
 				<module>../native-modules/tuxguitar-jack-linux</module>
 				<module>../native-modules/tuxguitar-fluidsynth-linux</module>
 				<module>../native-modules/tuxguitar-synth-lv2-linux</module>
+				<module>../native-modules/tuxguitar-nam-linux</module>
 			</modules>
 
 			<build>
@@ -414,6 +422,9 @@
 										</copy>
 										<copy todir="${project.build.directory}/${project.finalName}/">
 											<fileset dir="../native-modules/tuxguitar-synth-lv2-linux/target/build" />
+										</copy>
+										<copy todir="${project.build.directory}/${project.finalName}/">
+											<fileset dir="../native-modules/tuxguitar-nam-linux/target/build" />
 										</copy>
 										<chmod file="${project.build.directory}/${project.finalName}/lv2-client/*.bin" perm="755" />
 										<!-- /PLUGINS FILES -->
