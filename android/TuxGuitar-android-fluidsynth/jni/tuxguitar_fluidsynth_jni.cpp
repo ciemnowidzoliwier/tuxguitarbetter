@@ -95,7 +95,7 @@ struct FluidSynthInstance
     void noteOff(int channel, int key, int /* velocity */)
     {
         if (synth) {
-            // FluidSynth v2.3.4+ fluid_synth_noteoff only takes 3 args (velocity removed)
+            // FluidSynth v1.1.11+ fluid_synth_noteoff only takes 3 args (no velocity parameter)
             fluid_synth_noteoff(synth, channel, key);
         }
     }
@@ -137,10 +137,14 @@ struct FluidSynthInstance
         return value;
     }
 
-    const char* getStringProperty(const char* /* key */)
+    const char* getStringProperty(const char* key)
     {
-        // FluidSynth v2.3.4+ has no fluid_settings_getstr() to get current string values
-        // Only fluid_settings_getstr_default() exists for default values
+        if (!settings) return nullptr;
+        char* value = nullptr;
+        // FluidSynth v1.1.11 has fluid_settings_getstr(settings, name, char**)
+        if (fluid_settings_getstr(settings, key, &value) == FLUID_OK) {
+            return value;
+        }
         return nullptr;
     }
 

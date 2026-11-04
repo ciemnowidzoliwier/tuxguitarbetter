@@ -8,13 +8,12 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Android NDK toolchain is set by Gradle via -DCMAKE_TOOLCHAIN_FILE
 
 include(FetchContent)
+# Use FluidSynth v1.1.11 (last v1.x release) which doesn't require GLib2
+# v2.0.0+ made GLib2 a mandatory dependency which is problematic for Android cross-compilation
 FetchContent_Declare(fluidsynth
     GIT_REPOSITORY https://github.com/FluidSynth/fluidsynth.git
-    GIT_TAG v2.3.4
+    GIT_TAG v1.1.11
     GIT_SHALLOW TRUE
-    # Patch to disable mandatory GLib2 find_package and GLib2 linking for Android cross-compilation
-    # Apply two patches: one for root CMakeLists.txt, one for src/CMakeLists.txt
-    PATCH_COMMAND git apply "${CMAKE_CURRENT_SOURCE_DIR}/patches/disable-glib2-root.patch" && git apply "${CMAKE_CURRENT_SOURCE_DIR}/patches/disable-glib2-src.patch"
 )
 
 FetchContent_GetProperties(fluidsynth)
@@ -41,14 +40,6 @@ set(enable-dsound OFF CACHE BOOL "" FORCE)
 set(enable-midishare OFF CACHE BOOL "" FORCE)
 # Enable OpenSLES for Android audio output
 set(enable-opensles ON CACHE BOOL "" FORCE)
-# Disable GLib2 - not available for Android cross-compilation
-set(enable-glib2 OFF CACHE BOOL "" FORCE)
-set(FLUIDSYNTH_ENABLE_GLIB2 OFF CACHE BOOL "" FORCE)
-set(enable_glib2 OFF CACHE BOOL "" FORCE)
-set(WITH_GLIB2 OFF CACHE BOOL "" FORCE)
-set(ENABLE_GLIB2 OFF CACHE BOOL "" FORCE)
-set(GLIB2_FOUND OFF CACHE BOOL "" FORCE)
-set(GLib2_FOUND OFF CACHE BOOL "" FORCE)
 
 # Build FluidSynth as a static library to embed in our JNI library
 # This avoids needing to package libfluidsynth.so separately
