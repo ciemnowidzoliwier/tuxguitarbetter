@@ -16,23 +16,16 @@ FetchContent_Declare(fluidsynth
     GIT_SHALLOW TRUE
     # Copy our local cmake modules to fetched source's cmake_admin directory
     # This ensures the modules are available when the fetched source's CMakeLists.txt runs
+    # Use sh -c with && to run multiple commands sequentially
     PATCH_COMMAND
-        ${CMAKE_COMMAND} -E make_directory ${fluidsynth_SOURCE_DIR}/cmake_admin
-        ${CMAKE_COMMAND} -E copy_if_different
-            ${CMAKE_CURRENT_SOURCE_DIR}/cmake/DefaultDirs.cmake
-            ${fluidsynth_SOURCE_DIR}/cmake_admin/DefaultDirs.cmake
-        ${CMAKE_COMMAND} -E copy_if_different
-            ${CMAKE_CURRENT_SOURCE_DIR}/cmake/CheckSTDC.cmake
-            ${fluidsynth_SOURCE_DIR}/cmake_admin/CheckSTDC.cmake
-        ${CMAKE_COMMAND} -E copy_if_different
-            ${CMAKE_CURRENT_SOURCE_DIR}/cmake/TestInline.cmake
-            ${fluidsynth_SOURCE_DIR}/cmake_admin/TestInline.cmake
-        ${CMAKE_COMMAND} -E copy_if_different
-            ${CMAKE_CURRENT_SOURCE_DIR}/cmake/TestVLA.cmake
-            ${fluidsynth_SOURCE_DIR}/cmake_admin/TestVLA.cmake
-        ${CMAKE_COMMAND} -E copy_if_different
-            ${CMAKE_CURRENT_SOURCE_DIR}/cmake/UnsetPkgConfig.cmake
-            ${fluidsynth_SOURCE_DIR}/cmake_admin/UnsetPkgConfig.cmake
+        sh -c "
+            ${CMAKE_COMMAND} -E make_directory ${fluidsynth_SOURCE_DIR}/cmake_admin &&
+            ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/cmake/DefaultDirs.cmake ${fluidsynth_SOURCE_DIR}/cmake_admin/DefaultDirs.cmake &&
+            ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/cmake/CheckSTDC.cmake ${fluidsynth_SOURCE_DIR}/cmake_admin/CheckSTDC.cmake &&
+            ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/cmake/TestInline.cmake ${fluidsynth_SOURCE_DIR}/cmake_admin/TestInline.cmake &&
+            ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/cmake/TestVLA.cmake ${fluidsynth_SOURCE_DIR}/cmake_admin/TestVLA.cmake &&
+            ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/cmake/UnsetPkgConfig.cmake ${fluidsynth_SOURCE_DIR}/cmake_admin/UnsetPkgConfig.cmake
+        "
 )
 
 FetchContent_GetProperties(fluidsynth)
