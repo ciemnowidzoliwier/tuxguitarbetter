@@ -11,6 +11,7 @@ include(FetchContent)
 FetchContent_Declare(fluidsynth
     GIT_REPOSITORY https://github.com/FluidSynth/fluidsynth.git
     GIT_TAG v2.3.4
+    GIT_SHALLOW TRUE
     # Patch to disable mandatory GLib2 find_package for Android cross-compilation
     PATCH_FILE ${CMAKE_CURRENT_SOURCE_DIR}/patches/disable-glib2.patch
 )
