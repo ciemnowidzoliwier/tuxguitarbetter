@@ -12,7 +12,7 @@ FetchContent_Declare(fluidsynth
     GIT_REPOSITORY https://github.com/FluidSynth/fluidsynth.git
     GIT_TAG v2.3.4
     # Patch to disable mandatory GLib2 find_package for Android cross-compilation
-    PATCH_COMMAND sed -i 's/find_package ( GLib2/# find_package ( GLib2/' "${fluidsynth_SOURCE_DIR}/CMakeLists.txt"
+    PATCH_COMMAND sed -i 's/find_package ( GLib2/# find_package ( GLib2/' <SOURCE_DIR>/CMakeLists.txt
 )
 
 FetchContent_GetProperties(fluidsynth)
