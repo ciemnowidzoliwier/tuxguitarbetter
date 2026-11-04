@@ -23,7 +23,8 @@ endif()
 
 # Add FluidSynth's cmake_admin directory to CMAKE_MODULE_PATH for older CMake modules
 # (DefaultDirs, CheckSTDC, TestInline, TestVLA, UnsetPkgConfig, etc.)
-list(APPEND CMAKE_MODULE_PATH "${fluidsynth_SOURCE_DIR}/cmake_admin")
+# Use CACHE to make it visible to all subdirectories (including the fetched FluidSynth source)
+set(CMAKE_MODULE_PATH "${fluidsynth_SOURCE_DIR}/cmake_admin;${CMAKE_MODULE_PATH}" CACHE PATH "CMake module path for FluidSynth")
 
 # Configure FluidSynth build options for Android
 # Must be set BEFORE add_subdirectory
