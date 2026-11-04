@@ -21,6 +21,10 @@ if(NOT fluidsynth_POPULATED)
     FetchContent_Populate(fluidsynth)
 endif()
 
+# Add FluidSynth's cmake_admin directory to CMAKE_MODULE_PATH for older CMake modules
+# (DefaultDirs, CheckSTDC, TestInline, TestVLA, UnsetPkgConfig, etc.)
+list(APPEND CMAKE_MODULE_PATH "${fluidsynth_SOURCE_DIR}/cmake_admin")
+
 # Configure FluidSynth build options for Android
 # Must be set BEFORE add_subdirectory
 set(FLUIDSYNTH_BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
