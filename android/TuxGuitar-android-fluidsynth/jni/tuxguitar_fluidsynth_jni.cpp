@@ -92,10 +92,11 @@ struct FluidSynthInstance
         }
     }
 
-    void noteOff(int channel, int key, int velocity)
+    void noteOff(int channel, int key, int /* velocity */)
     {
         if (synth) {
-            fluid_synth_noteoff(synth, channel, key, velocity);
+            // FluidSynth v2.3.4+ fluid_synth_noteoff only takes 3 args (velocity removed)
+            fluid_synth_noteoff(synth, channel, key);
         }
     }
 
@@ -136,12 +137,11 @@ struct FluidSynthInstance
         return value;
     }
 
-    const char* getStringProperty(const char* key)
+    const char* getStringProperty(const char* /* key */)
     {
-        if (!settings) return nullptr;
-        const char* value = nullptr;
-        fluid_settings_getstr(settings, key, &value);
-        return value;
+        // FluidSynth v2.3.4+ has no fluid_settings_getstr() to get current string values
+        // Only fluid_settings_getstr_default() exists for default values
+        return nullptr;
     }
 
     void setDoubleProperty(const char* key, double value)
