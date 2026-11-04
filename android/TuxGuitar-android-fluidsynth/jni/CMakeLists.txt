@@ -16,14 +16,17 @@ FetchContent_Declare(fluidsynth
     GIT_SHALLOW TRUE
 )
 
+# Add FluidSynth's cmake_admin directory to CMAKE_MODULE_PATH for older CMake modules
+# (DefaultDirs, CheckSTDC, TestInline, TestVLA, UnsetPkgConfig, etc.)
+# Must be set BEFORE FetchContent_Populate() because it internally calls add_subdirectory()
+# which configures the fetched source's CMakeLists.txt.
 FetchContent_GetProperties(fluidsynth)
 if(NOT fluidsynth_POPULATED)
+    set(CMAKE_MODULE_PATH "${fluidsynth_SOURCE_DIR}/cmake_admin;${CMAKE_MODULE_PATH}" CACHE PATH "CMake module path for FluidSynth")
     FetchContent_Populate(fluidsynth)
 endif()
 
-# Add FluidSynth's cmake_admin directory to CMAKE_MODULE_PATH for older CMake modules
-# (DefaultDirs, CheckSTDC, TestInline, TestVLA, UnsetPkgConfig, etc.)
-# Use CACHE to make it visible to all subdirectories (including the fetched FluidSynth source)
+# Ensure CMAKE_MODULE_PATH is set even if already populated
 set(CMAKE_MODULE_PATH "${fluidsynth_SOURCE_DIR}/cmake_admin;${CMAKE_MODULE_PATH}" CACHE PATH "CMake module path for FluidSynth")
 
 # Configure FluidSynth build options for Android
