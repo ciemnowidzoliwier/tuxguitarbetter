@@ -11,6 +11,8 @@ include(FetchContent)
 FetchContent_Declare(fluidsynth
     GIT_REPOSITORY https://github.com/FluidSynth/fluidsynth.git
     GIT_TAG v2.3.4
+    # Patch to disable mandatory GLib2 find_package for Android cross-compilation
+    PATCH_COMMAND sed -i 's/find_package ( GLib2/# find_package ( GLib2/' "${fluidsynth_SOURCE_DIR}/CMakeLists.txt"
 )
 
 FetchContent_GetProperties(fluidsynth)
@@ -36,7 +38,6 @@ set(enable-waveout OFF CACHE BOOL "" FORCE)
 set(enable-dsound OFF CACHE BOOL "" FORCE)
 set(enable-midishare OFF CACHE BOOL "" FORCE)
 # Disable GLib2 - not available for Android cross-compilation
-# Try multiple possible option names for FluidSynth v2.3.4
 set(enable-glib2 OFF CACHE BOOL "" FORCE)
 set(FLUIDSYNTH_ENABLE_GLIB2 OFF CACHE BOOL "" FORCE)
 set(enable_glib2 OFF CACHE BOOL "" FORCE)
@@ -44,13 +45,6 @@ set(WITH_GLIB2 OFF CACHE BOOL "" FORCE)
 set(ENABLE_GLIB2 OFF CACHE BOOL "" FORCE)
 set(GLIB2_FOUND OFF CACHE BOOL "" FORCE)
 set(GLib2_FOUND OFF CACHE BOOL "" FORCE)
-
-# Patch FluidSynth CMakeLists.txt to disable GLib2 find_package
-# This is a fallback in case the options above don't work
-file(READ "${fluidsynth_SOURCE_DIR}/CMakeLists.txt" FLUIDSYNTH_CMAKELISTS)
-string(REPLACE "find_package(GLib2" "# find_package(GLib2" FLUIDSYNTH_CMAKELISTS ${FLUIDSYNTH_CMAKELISTS})
-string(REPLACE "find_package( GLib2" "# find_package( GLib2" FLUIDSYNTH_CMAKELISTS ${FLUIDSYNTH_CMAKELISTS})
-file(WRITE "${fluidsynth_SOURCE_DIR}/CMakeLists.txt" ${FLUIDSYNTH_CMAKELISTS})
 
 # Build FluidSynth as a static library to embed in our JNI library
 # This avoids needing to package libfluidsynth.so separately
