@@ -12,9 +12,9 @@ FetchContent_Declare(fluidsynth
     GIT_REPOSITORY https://github.com/FluidSynth/fluidsynth.git
     GIT_TAG v2.3.4
     GIT_SHALLOW TRUE
-    # Patch to disable mandatory GLib2 find_package for Android cross-compilation
-    # Using git apply via PATCH_COMMAND
-    PATCH_COMMAND git apply "${CMAKE_CURRENT_SOURCE_DIR}/patches/disable-glib2.patch"
+    # Patch to disable mandatory GLib2 find_package and GLib2 linking for Android cross-compilation
+    # Apply two patches: one for root CMakeLists.txt, one for src/CMakeLists.txt
+    PATCH_COMMAND git apply "${CMAKE_CURRENT_SOURCE_DIR}/patches/disable-glib2-root.patch" && git apply "${CMAKE_CURRENT_SOURCE_DIR}/patches/disable-glib2-src.patch"
 )
 
 FetchContent_GetProperties(fluidsynth)
