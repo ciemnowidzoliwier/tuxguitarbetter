@@ -61,8 +61,8 @@ add_library(tuxguitar-fluidsynth-jni SHARED
 )
 
 target_include_directories(tuxguitar-fluidsynth-jni PRIVATE
-    ${fluidsynth_SOURCE_DIR}/src/include
-    ${fluidsynth_BINARY_DIR}/src/include
+    ${fluidsynth_SOURCE_DIR}/include
+    ${fluidsynth_BINARY_DIR}/include
 )
 
 # Link against FluidSynth static library (libfluidsynth.a)
