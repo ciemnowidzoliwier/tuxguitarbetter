@@ -1,33 +1,39 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 9a1f914..a0527f8 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -362,7 +362,7 @@ if ( TARGET OpenMP::OpenMP_C AND HAVE_OPENMP )
      target_link_libraries ( libfluidsynth-OBJ PUBLIC OpenMP::OpenMP_C )
  endif()
-
+ 
 -target_link_libraries ( libfluidsynth-OBJ PUBLIC GLib2::glib-2 GLib2::gthread-2 )
 +# target_link_libraries ( libfluidsynth-OBJ PUBLIC GLib2::glib-2 GLib2::gthread-2 )
-
+ 
  if ( TARGET SndFile::sndfile AND LIBSNDFILE_SUPPORT )
      target_link_libraries ( libfluidsynth-OBJ PUBLIC SndFile::sndfile )
-@@ -398,8 +398,8 @@ if ( TARGET dbus-1 AND DBUS_SUPPORT )
+@@ -398,9 +398,9 @@ if ( TARGET dbus-1 AND DBUS_SUPPORT )
      target_link_libraries ( libfluidsynth-OBJ PUBLIC dbus-1 )
  endif()
-
+ 
 -if ( TARGET GLib2::gmodule-2 AND LADSPA_SUPPORT )
 -    target_link_libraries ( libfluidsynth-OBJ PUBLIC GLib2::gmodule-2 )
+-endif()
 +# if ( TARGET GLib2::gmodule-2 AND LADSPA_SUPPORT )
 +#     target_link_libraries ( libfluidsynth-OBJ PUBLIC GLib2::gmodule-2 )
- # endif()
-
++# endif()
+ 
  if ( TARGET InstPatch::libinstpatch AND LIBINSTPATCH_SUPPORT )
-@@ -486,8 +486,8 @@ if ( TARGET Systemd::libsystemd AND SYSTEMD_SUPPORT )
+     target_link_libraries ( libfluidsynth-OBJ PUBLIC InstPatch::libinstpatch )
+@@ -486,9 +486,9 @@ if ( TARGET Systemd::libsystemd AND SYSTEMD_SUPPORT )
      target_link_libraries ( fluidsynth PRIVATE Systemd::libsystemd )
  endif()
-
+ 
 -if ( TARGET GLib2::glib-2 ) # because g_file_test()
 -    target_link_libraries ( fluidsynth PRIVATE GLib2::glib-2 )
+-endif()
 +# if ( TARGET GLib2::glib-2 ) # because g_file_test()
 +#     target_link_libraries ( fluidsynth PRIVATE GLib2::glib-2 )
- # endif()
-
++# endif()
+ 
  if ( SDL2_SUPPORT ) # because SDL_Init() etc.
+     target_include_directories ( fluidsynth PRIVATE ${SDL2_INCLUDE_DIRS} )
