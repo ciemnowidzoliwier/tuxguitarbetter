@@ -7,26 +7,14 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Android NDK toolchain is set by Gradle via -DCMAKE_TOOLCHAIN_FILE
 
-include(FetchContent)
-# Use FluidSynth v1.1.11 (last v1.x release) which doesn't require GLib2
-# v2.0.0+ made GLib2 a mandatory dependency which is problematic for Android cross-compilation
-FetchContent_Declare(fluidsynth
-    GIT_REPOSITORY https://github.com/FluidSynth/fluidsynth.git
-    GIT_TAG v1.1.11
-    GIT_SHALLOW TRUE
-    # Copy our local cmake modules to fetched source's cmake_admin directory
-    # This ensures the modules are available when the fetched source's CMakeLists.txt runs
-    # Use a CMake script to avoid shell escaping issues in ninja build files
-    PATCH_COMMAND
-        ${CMAKE_COMMAND}
-        -DFLUIDSYNTH_SOURCE_DIR=${fluidsynth_SOURCE_DIR}
-        -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/patch_fluidsynth.cmake
-)
+# Use local FluidSynth source (cloned in CI workflow)
+# FluidSynth v1.1.11 doesn't require GLib2 (v2.0.0+ made GLib2 mandatory)
+set(FLUIDSYNTH_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/fluidsynth-src")
+set(FLUIDSYNTH_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/fluidsynth-build")
 
-FetchContent_GetProperties(fluidsynth)
-if(NOT fluidsynth_POPULATED)
-    FetchContent_Populate(fluidsynth)
-endif()
+# Add FluidSynth's cmake_admin directory to CMAKE_MODULE_PATH for older CMake modules
+# (DefaultDirs, CheckSTDC, TestInline, TestVLA, UnsetPkgConfig, etc.)
+set(CMAKE_MODULE_PATH "${FLUIDSYNTH_SOURCE_DIR}/cmake_admin;${CMAKE_MODULE_PATH}" CACHE PATH "CMake module path for FluidSynth")
 
 # Configure FluidSynth build options for Android
 # Must be set BEFORE add_subdirectory
@@ -51,7 +39,7 @@ set(enable-opensles ON CACHE BOOL "" FORCE)
 # Build FluidSynth as a static library to embed in our JNI library
 # This avoids needing to package libfluidsynth.so separately
 set(BUILD_SHARED_LIBS OFF)
-add_subdirectory(${fluidsynth_SOURCE_DIR} ${fluidsynth_BINARY_DIR})
+add_subdirectory(${FLUIDSYNTH_SOURCE_DIR} ${FLUIDSYNTH_BINARY_DIR})
 
 # Now create our JNI wrapper
 add_library(tuxguitar-fluidsynth-jni SHARED
@@ -59,14 +47,14 @@ add_library(tuxguitar-fluidsynth-jni SHARED
 )
 
 target_include_directories(tuxguitar-fluidsynth-jni PRIVATE
-    ${fluidsynth_SOURCE_DIR}/include
-    ${fluidsynth_BINARY_DIR}/include
+    ${FLUIDSYNTH_SOURCE_DIR}/include
+    ${FLUIDSYNTH_BINARY_DIR}/include
 )
 
 # Link against FluidSynth static library (libfluidsynth.a)
 # The 'fluidsynth' target might be the executable, so use the library file directly
 target_link_libraries(tuxguitar-fluidsynth-jni PRIVATE
-    ${fluidsynth_BINARY_DIR}/src/libfluidsynth.a
+    ${FLUIDSYNTH_BINARY_DIR}/src/libfluidsynth.a
     log
     OpenSLES
 )

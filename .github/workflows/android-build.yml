@@ -45,8 +45,18 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Clone FluidSynth v1.1.11 (no GLib2 dependency)
+        run: |
+          git clone --depth 1 --branch v1.1.11 https://github.com/FluidSynth/fluidsynth.git \
+            android/TuxGuitar-android-fluidsynth/jni/fluidsynth-src
         with:
           submodules: recursive
+
+      - name: Clone FluidSynth v1.1.11 (no GLib2 dependency)
+        run: |
+          git clone --depth 1 --branch v1.1.11 https://github.com/FluidSynth/fluidsynth.git \
+            android/TuxGuitar-android-fluidsynth/jni/fluidsynth-src
 
       - name: Set up JDK 17
         uses: actions/setup-java@v5
@@ -147,6 +157,11 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Clone FluidSynth v1.1.11 (no GLib2 dependency)
+        run: |
+          git clone --depth 1 --branch v1.1.11 https://github.com/FluidSynth/fluidsynth.git \
+            android/TuxGuitar-android-fluidsynth/jni/fluidsynth-src
 
       - name: Set up JDK 17
         uses: actions/setup-java@v5
