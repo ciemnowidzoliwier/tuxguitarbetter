@@ -16,18 +16,24 @@ FetchContent_Declare(fluidsynth
     GIT_SHALLOW TRUE
 )
 
-# Add FluidSynth's cmake_admin directory to CMAKE_MODULE_PATH for older CMake modules
-# (DefaultDirs, CheckSTDC, TestInline, TestVLA, UnsetPkgConfig, etc.)
-# Must be set BEFORE FetchContent_Populate() because it internally calls add_subdirectory()
-# which configures the fetched source's CMakeLists.txt.
+# Add local cmake directory (with FluidSynth v1.1.11 modules) to CMAKE_MODULE_PATH
+# This avoids issues with FetchContent_Populate() timing and Android Gradle plugin's
+# separate CMake invocations. Modules are copied from FluidSynth v1.1.11 cmake_admin.
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake;${CMAKE_MODULE_PATH}" CACHE PATH "CMake module path for FluidSynth")
+
+include(FetchContent)
+# Use FluidSynth v1.1.11 (last v1.x release) which doesn't require GLib2
+# v2.0.0+ made GLib2 a mandatory dependency which is problematic for Android cross-compilation
+FetchContent_Declare(fluidsynth
+    GIT_REPOSITORY https://github.com/FluidSynth/fluidsynth.git
+    GIT_TAG v1.1.11
+    GIT_SHALLOW TRUE
+)
+
 FetchContent_GetProperties(fluidsynth)
 if(NOT fluidsynth_POPULATED)
-    set(CMAKE_MODULE_PATH "${fluidsynth_SOURCE_DIR}/cmake_admin;${CMAKE_MODULE_PATH}" CACHE PATH "CMake module path for FluidSynth")
     FetchContent_Populate(fluidsynth)
 endif()
-
-# Ensure CMAKE_MODULE_PATH is set even if already populated
-set(CMAKE_MODULE_PATH "${fluidsynth_SOURCE_DIR}/cmake_admin;${CMAKE_MODULE_PATH}" CACHE PATH "CMake module path for FluidSynth")
 
 # Configure FluidSynth build options for Android
 # Must be set BEFORE add_subdirectory
