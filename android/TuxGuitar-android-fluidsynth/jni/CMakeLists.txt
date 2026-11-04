@@ -41,6 +41,16 @@ set(enable-glib2 OFF CACHE BOOL "" FORCE)
 set(FLUIDSYNTH_ENABLE_GLIB2 OFF CACHE BOOL "" FORCE)
 set(enable_glib2 OFF CACHE BOOL "" FORCE)
 set(WITH_GLIB2 OFF CACHE BOOL "" FORCE)
+set(ENABLE_GLIB2 OFF CACHE BOOL "" FORCE)
+set(GLIB2_FOUND OFF CACHE BOOL "" FORCE)
+set(GLib2_FOUND OFF CACHE BOOL "" FORCE)
+
+# Patch FluidSynth CMakeLists.txt to disable GLib2 find_package
+# This is a fallback in case the options above don't work
+file(READ "${fluidsynth_SOURCE_DIR}/CMakeLists.txt" FLUIDSYNTH_CMAKELISTS)
+string(REPLACE "find_package(GLib2" "# find_package(GLib2" FLUIDSYNTH_CMAKELISTS ${FLUIDSYNTH_CMAKELISTS})
+string(REPLACE "find_package( GLib2" "# find_package( GLib2" FLUIDSYNTH_CMAKELISTS ${FLUIDSYNTH_CMAKELISTS})
+file(WRITE "${fluidsynth_SOURCE_DIR}/CMakeLists.txt" ${FLUIDSYNTH_CMAKELISTS})
 
 # Build FluidSynth as a static library to embed in our JNI library
 # This avoids needing to package libfluidsynth.so separately
