@@ -1,0 +1,10 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -522,7 +522,7 @@ set ( GLIB2_MINUMUM_VERSION 2.6.5 )
+
+ # Mandatory libraries: glib and gthread
+-find_package ( GLib2 ${GLIB2_MINUMUM_VERSION} REQUIRED )
++# find_package ( GLib2 ${GLIB2_MINUMUM_VERSION} REQUIRED )
+ list( APPEND PC_REQUIRES_PRIV "glib-2.0" "gthread-2.0")
+
+ if ( GLib2_VERSION AND GLib2_VERSION VERSION_LESS "2.26.0" )

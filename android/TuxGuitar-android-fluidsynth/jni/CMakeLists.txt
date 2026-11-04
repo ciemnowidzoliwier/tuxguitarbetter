@@ -11,24 +11,13 @@ include(FetchContent)
 FetchContent_Declare(fluidsynth
     GIT_REPOSITORY https://github.com/FluidSynth/fluidsynth.git
     GIT_TAG v2.3.4
+    # Patch to disable mandatory GLib2 find_package for Android cross-compilation
+    PATCH_FILE ${CMAKE_CURRENT_SOURCE_DIR}/patches/disable-glib2.patch
 )
 
 FetchContent_GetProperties(fluidsynth)
 if(NOT fluidsynth_POPULATED)
     FetchContent_Populate(fluidsynth)
-endif()
-
-# Patch FluidSynth CMakeLists.txt to disable mandatory GLib2 find_package
-# This must be done AFTER FetchContent_Populate but BEFORE add_subdirectory
-execute_process(
-    COMMAND sed -i 's/find_package ( GLib2/# find_package ( GLib2/' "${fluidsynth_SOURCE_DIR}/CMakeLists.txt"
-    WORKING_DIRECTORY "${fluidsynth_SOURCE_DIR}"
-    RESULT_VARIABLE patch_result
-    OUTPUT_VARIABLE patch_output
-    ERROR_VARIABLE patch_error
-)
-if(patch_result)
-    message(WARNING "Failed to patch FluidSynth CMakeLists.txt: ${patch_error}")
 endif()
 
 # Configure FluidSynth build options for Android
