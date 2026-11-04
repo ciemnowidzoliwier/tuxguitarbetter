@@ -74,6 +74,7 @@ jobs:
 
       - name: Build Debug APK
         run: |
+          set -o pipefail
           cd android/build-scripts/tuxguitar-android
           ./gradlew :apk:assembleDebug --no-daemon --stacktrace --info 2>&1 | tee build-debug.log
 
@@ -87,6 +88,7 @@ jobs:
 
       - name: Build Release APK
         run: |
+          set -o pipefail
           cd android/build-scripts/tuxguitar-android
           ./gradlew :apk:assembleRelease --no-daemon --stacktrace --info 2>&1 | tee build-release.log
 
@@ -157,6 +159,7 @@ jobs:
 
       - name: Run Lint
         run: |
+          set -o pipefail
           cd android/build-scripts/tuxguitar-android
           ./gradlew :apk:lintDebug --no-daemon --stacktrace --info 2>&1 | tee lint-debug.log
 

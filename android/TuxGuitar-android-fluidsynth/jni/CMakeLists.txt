@@ -19,6 +19,7 @@ if(NOT fluidsynth_POPULATED)
 endif()
 
 # Configure FluidSynth build options for Android
+# Must be set BEFORE add_subdirectory
 set(FLUIDSYNTH_BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
 set(LIB_SUFFIX "" CACHE STRING "" FORCE)
 set(enable-ladspa OFF CACHE BOOL "" FORCE)
@@ -35,7 +36,11 @@ set(enable-waveout OFF CACHE BOOL "" FORCE)
 set(enable-dsound OFF CACHE BOOL "" FORCE)
 set(enable-midishare OFF CACHE BOOL "" FORCE)
 # Disable GLib2 - not available for Android cross-compilation
+# Try multiple possible option names for FluidSynth v2.3.4
 set(enable-glib2 OFF CACHE BOOL "" FORCE)
+set(FLUIDSYNTH_ENABLE_GLIB2 OFF CACHE BOOL "" FORCE)
+set(enable_glib2 OFF CACHE BOOL "" FORCE)
+set(WITH_GLIB2 OFF CACHE BOOL "" FORCE)
 
 # Build FluidSynth as a static library to embed in our JNI library
 # This avoids needing to package libfluidsynth.so separately
