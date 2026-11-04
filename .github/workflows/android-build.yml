@@ -26,7 +26,7 @@ jobs:
   build:
     name: Build Android APK
     runs-on: ubuntu-24.04
-    timeout-minutes: 60
+    timeout-minutes: 90
 
     steps:
       - name: Install system dependencies
@@ -46,7 +46,7 @@ jobs:
           submodules: recursive
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -75,12 +75,12 @@ jobs:
       - name: Build Debug APK
         run: |
           cd android/build-scripts/tuxguitar-android
-          ./gradlew :apk:assembleDebug --no-daemon --stacktrace
+          ./gradlew :apk:assembleDebug --no-daemon --stacktrace --info
 
       - name: Build Release APK
         run: |
           cd android/build-scripts/tuxguitar-android
-          ./gradlew :apk:assembleRelease --no-daemon --stacktrace
+          ./gradlew :apk:assembleRelease --no-daemon --stacktrace --info
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
@@ -107,7 +107,7 @@ jobs:
   lint:
     name: Android Lint
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 45
 
     steps:
       - name: Install system dependencies
@@ -125,7 +125,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -142,7 +142,7 @@ jobs:
       - name: Run Lint
         run: |
           cd android/build-scripts/tuxguitar-android
-          ./gradlew :apk:lintDebug --no-daemon --stacktrace
+          ./gradlew :apk:lintDebug --no-daemon --stacktrace --info
 
       - name: Upload Lint Report
         uses: actions/upload-artifact@v4
