@@ -14,20 +14,25 @@ FetchContent_Declare(fluidsynth
     GIT_REPOSITORY https://github.com/FluidSynth/fluidsynth.git
     GIT_TAG v1.1.11
     GIT_SHALLOW TRUE
-)
-
-# Add local cmake directory (with FluidSynth v1.1.11 modules) to CMAKE_MODULE_PATH
-# This avoids issues with FetchContent_Populate() timing and Android Gradle plugin's
-# separate CMake invocations. Modules are copied from FluidSynth v1.1.11 cmake_admin.
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake;${CMAKE_MODULE_PATH}" CACHE PATH "CMake module path for FluidSynth")
-
-include(FetchContent)
-# Use FluidSynth v1.1.11 (last v1.x release) which doesn't require GLib2
-# v2.0.0+ made GLib2 a mandatory dependency which is problematic for Android cross-compilation
-FetchContent_Declare(fluidsynth
-    GIT_REPOSITORY https://github.com/FluidSynth/fluidsynth.git
-    GIT_TAG v1.1.11
-    GIT_SHALLOW TRUE
+    # Copy our local cmake modules to fetched source's cmake_admin directory
+    # This ensures the modules are available when the fetched source's CMakeLists.txt runs
+    PATCH_COMMAND
+        ${CMAKE_COMMAND} -E make_directory ${fluidsynth_SOURCE_DIR}/cmake_admin
+        ${CMAKE_COMMAND} -E copy_if_different
+            ${CMAKE_CURRENT_SOURCE_DIR}/cmake/DefaultDirs.cmake
+            ${fluidsynth_SOURCE_DIR}/cmake_admin/DefaultDirs.cmake
+        ${CMAKE_COMMAND} -E copy_if_different
+            ${CMAKE_CURRENT_SOURCE_DIR}/cmake/CheckSTDC.cmake
+            ${fluidsynth_SOURCE_DIR}/cmake_admin/CheckSTDC.cmake
+        ${CMAKE_COMMAND} -E copy_if_different
+            ${CMAKE_CURRENT_SOURCE_DIR}/cmake/TestInline.cmake
+            ${fluidsynth_SOURCE_DIR}/cmake_admin/TestInline.cmake
+        ${CMAKE_COMMAND} -E copy_if_different
+            ${CMAKE_CURRENT_SOURCE_DIR}/cmake/TestVLA.cmake
+            ${fluidsynth_SOURCE_DIR}/cmake_admin/TestVLA.cmake
+        ${CMAKE_COMMAND} -E copy_if_different
+            ${CMAKE_CURRENT_SOURCE_DIR}/cmake/UnsetPkgConfig.cmake
+            ${fluidsynth_SOURCE_DIR}/cmake_admin/UnsetPkgConfig.cmake
 )
 
 FetchContent_GetProperties(fluidsynth)
