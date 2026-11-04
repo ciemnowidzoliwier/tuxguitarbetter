@@ -75,12 +75,28 @@ jobs:
       - name: Build Debug APK
         run: |
           cd android/build-scripts/tuxguitar-android
-          ./gradlew :apk:assembleDebug --no-daemon --stacktrace --info
+          ./gradlew :apk:assembleDebug --no-daemon --stacktrace --info 2>&1 | tee build-debug.log
+
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-debug-log
+          path: android/build-scripts/tuxguitar-android/build-debug.log
+          retention-days: 30
 
       - name: Build Release APK
         run: |
           cd android/build-scripts/tuxguitar-android
-          ./gradlew :apk:assembleRelease --no-daemon --stacktrace --info
+          ./gradlew :apk:assembleRelease --no-daemon --stacktrace --info 2>&1 | tee build-release.log
+
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-release-log
+          path: android/build-scripts/tuxguitar-android/build-release.log
+          retention-days: 30
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
@@ -142,7 +158,15 @@ jobs:
       - name: Run Lint
         run: |
           cd android/build-scripts/tuxguitar-android
-          ./gradlew :apk:lintDebug --no-daemon --stacktrace --info
+          ./gradlew :apk:lintDebug --no-daemon --stacktrace --info 2>&1 | tee lint-debug.log
+
+      - name: Upload lint log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint-debug-log
+          path: android/build-scripts/tuxguitar-android/lint-debug.log
+          retention-days: 30
 
       - name: Upload Lint Report
         uses: actions/upload-artifact@v4
