@@ -39,6 +39,8 @@ set(enable-readline OFF CACHE BOOL "" FORCE)
 set(enable-waveout OFF CACHE BOOL "" FORCE)
 set(enable-dsound OFF CACHE BOOL "" FORCE)
 set(enable-midishare OFF CACHE BOOL "" FORCE)
+# Enable OpenSLES for Android audio output
+set(enable-opensles ON CACHE BOOL "" FORCE)
 # Disable GLib2 - not available for Android cross-compilation
 set(enable-glib2 OFF CACHE BOOL "" FORCE)
 set(FLUIDSYNTH_ENABLE_GLIB2 OFF CACHE BOOL "" FORCE)
@@ -63,9 +65,10 @@ target_include_directories(tuxguitar-fluidsynth-jni PRIVATE
     ${fluidsynth_BINARY_DIR}/src/include
 )
 
-# Link against FluidSynth static library
+# Link against FluidSynth static library (libfluidsynth.a)
+# The 'fluidsynth' target might be the executable, so use the library file directly
 target_link_libraries(tuxguitar-fluidsynth-jni PRIVATE
-    fluidsynth
+    ${fluidsynth_BINARY_DIR}/src/libfluidsynth.a
     log
     OpenSLES
 )
